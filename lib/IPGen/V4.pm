@@ -6,7 +6,7 @@ use AutoLoader qw(AUTOLOAD);
 use vars qw($VERSION @ISA @EXPORT);
 @ISA = qw(Exporter);
 @EXPORT = qw( ipgen );
-$VERSION = '1';
+$VERSION = '1.1';
 sub new{
 	my $self = bless {}, shift;
 	$self->{range} = shift;
@@ -22,7 +22,7 @@ sub ipgen{
 	}elsif($range =~ /^((\d{1,3}\.){3}\d{1,3})-((\d{1,3}\.){3}\d{1,3})$/)	#ipv4-ipv4(full-range)
 	{
 		my $from = (unpack N => pack CCCC => split /\./ => $1);
-		join '.', unpack 'C4', pack 'N', $from + int rand unpack N => pack CCCC => split /\./ => $3 - $from;
+		join '.', unpack 'C4', pack 'N', $from + int rand ((unpack N => pack CCCC => split /\./ => $3) - $from);
 	}elsif($range =~ /^(\d{1,3})-?(\d{1,3})?\.(\d{1,3})-?(\d{1,3})?\.(\d{1,3})-?(\d{1,3})?\.(\d{1,3})-?(\d{1,3})?$/)	#byte1.1-byte1.2...(sub-range)
 	{
 		($1+int rand abs $2-$1+1).'.'.($3+int rand abs $4-$3+1).'.'.($5+int rand abs $6-$5+1).'.'.($7+int rand abs $8-$7+1);
@@ -35,7 +35,7 @@ sub ipgen{
 __END__
 =head1 NAME
 
-IPGen::V4 - Perl extension for -fast- random IP address generating 
+IPGen::V4 - Perl extension for -Fast- random IP address generating 
 
 =head1 SYNOPSIS
 
@@ -46,11 +46,11 @@ IPGen::V4 - Perl extension for -fast- random IP address generating
   print ipgen("4-43.2.2-20.4-8");	#sub-range	
   #OO
   $ig = new IPGen::V4("4.2.2.4/25");
-  print ipgen()."\n" for 1..300;
+  print $ig->ipgen()."\n" for 1..300;
 
 =head1 DESCRIPTION
 
-The main purpose of the IPGen::V4 module providing fun and easy way to generate random v4 ip addresses by CIDR,full range (from - to) and subrange.
+The main purpose of the IPGen::V4 module is providing fun and easy way to generate random v4 ip addresses by CIDR,Full range (from - to) and subrange.
 
 =head2 EXPORT
 
@@ -62,7 +62,7 @@ L<http://en.wikipedia.org/wiki/IPv4>
 
 =head1 AUTHOR
 
-Sadegh Ahmadzadegan (sadegh.ahm@gmail.com)
+Sadegh Ahmadzadegan (sadegh@cpan.org)
 
 =head1 COPYRIGHT AND LICENSE
 
